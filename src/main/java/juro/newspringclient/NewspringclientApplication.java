@@ -1,9 +1,14 @@
 package juro.newspringclient;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.graphql.data.method.annotation.BatchMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +54,14 @@ class CustomerGraphqlController {
 		this.cc = cc;
 	}
 
+	@BatchMapping(field = "profile", typeName = "Customer")
+	Map<Customer, Profile> customers(List<Customer> customers) {
+		var map = new HashMap<Customer, Profile>();
+		for (var c : customers)
+			map.put(c, new Profile(c.id()));
+		return map;
+	}
+
 	@QueryMapping
 	Flux<Customer> customers() {
 		return this.cc.all();
@@ -67,3 +80,5 @@ interface CustomerHttpClient {
 record Customer(Long id, String name) {
 }
 
+record Profile(Long id) {
+}
