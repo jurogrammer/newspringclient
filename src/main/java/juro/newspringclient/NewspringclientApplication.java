@@ -46,6 +46,21 @@ public class NewspringclientApplication {
 	}
 }
 
+interface CustomerHttpClient {
+
+	@GetExchange("/customers")
+	Flux<Customer> all();
+
+	@GetExchange("/customers/{name}")
+	Flux<Customer> byName(@PathVariable String name);
+}
+
+record Customer(Long id, String name) {
+}
+
+record Profile(Long id) {
+}
+
 @Controller
 class CustomerGraphqlController {
 	private final CustomerHttpClient cc;
@@ -66,19 +81,4 @@ class CustomerGraphqlController {
 	Flux<Customer> customers() {
 		return this.cc.all();
 	}
-}
-
-interface CustomerHttpClient {
-
-	@GetExchange("/customers")
-	Flux<Customer> all();
-
-	@GetExchange("/customers/{name}")
-	Flux<Customer> byName(@PathVariable String name);
-}
-
-record Customer(Long id, String name) {
-}
-
-record Profile(Long id) {
 }
