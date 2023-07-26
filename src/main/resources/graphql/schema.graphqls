@@ -1,19 +1,20 @@
 type Query {
     customers: [Customer]
 }
-#
-#type Customer {
-#    id: ID
-#    name: String
-#}
-
-type Profile {
-    id: ID
-}
 
 type Customer {
     id: ID
     name: String
-    profile: Profile
 }
 
+
+#type Customer {
+#    id: ID
+#    name: String
+#    profile: Profile
+#}
+#
+#type Profile {
+#    id: ID
+#}
+#

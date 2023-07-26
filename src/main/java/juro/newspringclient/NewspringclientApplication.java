@@ -37,12 +37,11 @@ public class NewspringclientApplication {
 	CustomerHttpClient client(WebClient.Builder builder) {
 		var wc = builder.baseUrl("http://localhost:8080").build();
 		var wca = WebClientAdapter.forClient(wc);
-		var h = HttpServiceProxyFactory.builder()
+
+		return HttpServiceProxyFactory.builder()
 			.clientAdapter(wca)
 			.build()
 			.createClient(CustomerHttpClient.class);
-
-		return h;
 	}
 }
 
@@ -69,16 +68,17 @@ class CustomerGraphqlController {
 		this.cc = cc;
 	}
 
-	@BatchMapping(field = "profile", typeName = "Customer")
-	Map<Customer, Profile> customers(List<Customer> customers) {
+	@QueryMapping
+	Flux<Customer> customers() {
+		return this.cc.all();
+	}
+
+	@BatchMapping
+	Map<Customer, Profile> profile(List<Customer> customers) {
 		var map = new HashMap<Customer, Profile>();
 		for (var c : customers)
 			map.put(c, new Profile(c.id()));
 		return map;
 	}
 
-	@QueryMapping
-	Flux<Customer> customers() {
-		return this.cc.all();
-	}
 }
